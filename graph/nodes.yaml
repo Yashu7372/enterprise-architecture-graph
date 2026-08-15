@@ -1,0 +1,166 @@
+version: 0.1.0
+node_types:
+  - concept
+  - pattern
+  - architecture
+  - failure_mode
+  - capability
+  - project
+  - lab
+  - practice
+  - quality_attribute
+maturity_states:
+  - DISCOVERED
+  - LEARNING
+  - UNDERSTOOD
+  - IMPLEMENTED
+  - TESTED
+  - PUBLISHED
+  - MASTERED
+nodes:
+  - id: functional-requirements
+    name: Functional Requirements
+    type: concept
+    domain: architecture-foundations
+    maturity: UNDERSTOOD
+    summary: Defines externally observable capabilities a system must provide.
+
+  - id: non-functional-requirements
+    name: Non-Functional Requirements
+    type: concept
+    domain: architecture-foundations
+    maturity: UNDERSTOOD
+    summary: Defines quality attributes and operational constraints such as latency, availability, throughput, security, and recoverability.
+
+  - id: architecture-decision-record
+    name: Architecture Decision Record
+    type: practice
+    domain: architecture-foundations
+    maturity: LEARNING
+    summary: Records a significant architecture decision, its context, alternatives, consequences, and rationale.
+
+  - id: idempotency
+    name: Idempotency
+    type: concept
+    domain: distributed-systems
+    maturity: UNDERSTOOD
+    summary: Makes repeated processing of the same logical operation safe.
+
+  - id: idempotent-consumer
+    name: Idempotent Consumer
+    type: pattern
+    domain: distributed-systems
+    maturity: UNDERSTOOD
+    summary: Prevents duplicate message delivery from producing duplicate business effects.
+
+  - id: transactional-outbox
+    name: Transactional Outbox
+    type: pattern
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Persists business state and an outbound event atomically before asynchronous publication.
+
+  - id: dual-write-problem
+    name: Dual Write Problem
+    type: failure_mode
+    domain: distributed-systems
+    maturity: UNDERSTOOD
+    summary: A consistency risk created when one logical business operation must atomically update two independent systems, such as a database and a broker.
+
+  - id: duplicate-delivery
+    name: Duplicate Delivery
+    type: failure_mode
+    domain: distributed-systems
+    maturity: UNDERSTOOD
+    summary: The same logical message is delivered or processed more than once.
+
+  - id: canonical-event
+    name: Canonical Event Envelope
+    type: pattern
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Adds stable cross-domain metadata and event semantics around domain events without erasing domain ownership.
+
+  - id: event-journal
+    name: Canonical Event Journal
+    type: capability
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Durable ordered evidence of accepted operational events used for replay, lineage, diagnostics, and projection recovery.
+
+  - id: entity-timeline
+    name: Entity Timeline
+    type: architecture
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Reconstructs the event history and state evolution of a business entity over time.
+
+  - id: operational-projection
+    name: Operational Projection
+    type: pattern
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Maintains query-optimized current operational state derived from accepted events.
+
+  - id: projection-change
+    name: Projection Change Event
+    type: pattern
+    domain: event-driven-architecture
+    maturity: UNDERSTOOD
+    summary: Describes which current-state fields changed so downstream processing can be selective.
+
+  - id: impact-resolver
+    name: Impact Resolver
+    type: capability
+    domain: architecture-foundations
+    maturity: UNDERSTOOD
+    summary: Deterministically determines which dependent projections, rules, aggregates, code, or workflows are affected by a change.
+
+  - id: durable-dag
+    name: Durable DAG Execution
+    type: architecture
+    domain: ai-engineering
+    maturity: UNDERSTOOD
+    summary: Executes dependency-aware work with persisted task state, retry semantics, leasing, cancellation, and recovery.
+
+  - id: repository-relationship-graph
+    name: Repository Relationship Graph
+    type: architecture
+    domain: ai-engineering
+    maturity: LEARNING
+    summary: Represents semantic relationships across code, APIs, events, databases, configuration, and services.
+
+  - id: context-engineering
+    name: Context Engineering
+    type: capability
+    domain: ai-engineering
+    maturity: LEARNING
+    summary: Constructs bounded, task-specific information for AI reasoning rather than exposing the entire enterprise codebase.
+
+  - id: deterministic-verification
+    name: Deterministic Verification
+    type: capability
+    domain: ai-engineering
+    maturity: UNDERSTOOD
+    summary: Uses compilation, tests, policy checks, scanners, and runtime probes to verify AI-assisted changes independently of model judgment.
+
+  - id: evidence-model
+    name: Engineering Evidence Model
+    type: capability
+    domain: ai-engineering
+    maturity: LEARNING
+    summary: Preserves inputs, decisions, execution outcomes, verification results, and provenance for auditable engineering workflows.
+
+  - id: chronicle
+    name: Chronicle Operational Intelligence Platform
+    type: project
+    domain: event-driven-architecture
+    maturity: LEARNING
+    summary: Flagship reference architecture for operational timelines, projections, impact-driven processing, and real-time views.
+
+  - id: forge
+    name: Forge AI Engineering Control Plane
+    type: project
+    domain: ai-engineering
+    maturity: LEARNING
+    summary: Flagship reference architecture for durable AI-assisted software engineering orchestration.
