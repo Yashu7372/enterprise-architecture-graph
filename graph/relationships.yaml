@@ -1,0 +1,112 @@
+version: 0.1.0
+relationship_types:
+  - REQUIRES
+  - SOLVES
+  - MITIGATES
+  - MAY_CAUSE
+  - ENABLES
+  - COMPLEMENTS
+  - PRODUCES
+  - CONSUMES
+  - FEEDS
+  - USED_BY
+  - BUILDS_ON
+  - INFORMS
+relationships:
+  - from: transactional-outbox
+    relation: SOLVES
+    to: dual-write-problem
+
+  - from: transactional-outbox
+    relation: MAY_CAUSE
+    to: duplicate-delivery
+    note: A publisher can crash after publish but before marking an outbox record sent, so delivery remains commonly at-least-once.
+
+  - from: transactional-outbox
+    relation: COMPLEMENTS
+    to: idempotent-consumer
+
+  - from: idempotency
+    relation: MITIGATES
+    to: duplicate-delivery
+
+  - from: idempotent-consumer
+    relation: REQUIRES
+    to: idempotency
+
+  - from: canonical-event
+    relation: FEEDS
+    to: event-journal
+
+  - from: event-journal
+    relation: ENABLES
+    to: entity-timeline
+
+  - from: entity-timeline
+    relation: FEEDS
+    to: operational-projection
+
+  - from: operational-projection
+    relation: PRODUCES
+    to: projection-change
+
+  - from: projection-change
+    relation: FEEDS
+    to: impact-resolver
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: transactional-outbox
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: canonical-event
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: event-journal
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: entity-timeline
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: operational-projection
+
+  - from: chronicle
+    relation: BUILDS_ON
+    to: impact-resolver
+
+  - from: repository-relationship-graph
+    relation: FEEDS
+    to: impact-resolver
+
+  - from: impact-resolver
+    relation: INFORMS
+    to: context-engineering
+
+  - from: context-engineering
+    relation: USED_BY
+    to: forge
+
+  - from: durable-dag
+    relation: USED_BY
+    to: forge
+
+  - from: repository-relationship-graph
+    relation: USED_BY
+    to: forge
+
+  - from: deterministic-verification
+    relation: PRODUCES
+    to: evidence-model
+    note: Verification outputs become one class of evidence recorded by the engineering evidence model.
+
+  - from: deterministic-verification
+    relation: USED_BY
+    to: forge
+
+  - from: evidence-model
+    relation: USED_BY
+    to: forge
