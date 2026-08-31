@@ -1,0 +1,54 @@
+name: graph-validation
+
+on:
+  push:
+    paths:
+      - "graph/**"
+      - "labs/**"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/graph-validation.yml"
+  pull_request:
+    paths:
+      - "graph/**"
+      - "labs/**"
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/graph-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python helpers
+        run: python -m compileall -q scripts tests
+
+      - name: Run graph and lab tests
+        run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Parse machine-readable graph and lab JSON
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          for path in sorted(Path("labs").glob("**/*.json")):
+              json.loads(path.read_text(encoding="utf-8"))
+          for path in sorted(Path("graph/candidates").glob("*.json")):
+              json.loads(path.read_text(encoding="utf-8"))
+          print("machine-readable JSON: PASS")
+          PY
