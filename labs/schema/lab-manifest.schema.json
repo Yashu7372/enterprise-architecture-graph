@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://portfolio.local/schemas/lab-manifest.v1.json",
+  "title": "Enterprise Architecture Lab Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "family",
+    "status",
+    "question",
+    "hypothesis",
+    "variants",
+    "task_fixtures",
+    "evidence_requirements",
+    "metrics",
+    "success_criteria",
+    "publication"
+  ],
+  "properties": {
+    "schema_version": {"const": "lab-manifest.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": ["DESIGNED", "RUNNABLE", "EXECUTED", "VERIFIED", "PUBLISHED"]
+    },
+    "question": {"type": "string", "minLength": 1},
+    "hypothesis": {"type": "string", "minLength": 1},
+    "principles": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "description"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "decision_authority": {"type": "string"}
+        }
+      }
+    },
+    "task_fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "task_shape", "expected_route"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "task_shape": {"type": "string", "minLength": 1},
+          "expected_route": {"type": "string", "minLength": 1},
+          "risk": {"type": "string"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "direction": {"enum": ["HIGHER_IS_BETTER", "LOWER_IS_BETTER", "TARGET"]}
+        }
+      }
+    },
+    "success_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publish_results_only_after_verification", "content_angles"],
+      "properties": {
+        "publish_results_only_after_verification": {"type": "boolean"},
+        "content_angles": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "url", "use"],
+        "properties": {
+          "label": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "minLength": 1},
+          "use": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
