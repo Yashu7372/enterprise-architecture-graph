@@ -1,0 +1,120 @@
+{
+  "schema_version": "lab-manifest.v1",
+  "id": "LAB-AI-001",
+  "title": "Deterministic Routing vs LLM Numeric Scoring",
+  "family": "agentic-architecture-evaluation",
+  "status": "DESIGNED",
+  "question": "When selecting an execution strategy, does categorical feature extraction followed by deterministic routing produce more stable and auditable decisions than asking an LLM to emit the final numeric score?",
+  "hypothesis": "A deterministic picker fed by bounded categorical features will produce higher routing consistency, clearer decision traces, and fewer unnecessary high-reasoning routes while retaining semantic flexibility where task classification actually needs it.",
+  "principles": [
+    "LLM interpretation is not execution authority",
+    "Prefer categorical bounded outputs over unconstrained numeric judgment",
+    "Compose the deciding score or route deterministically",
+    "Use the lightest sufficient reasoning strategy",
+    "Preserve every routing decision as evidence"
+  ],
+  "variants": [
+    {
+      "id": "llm-final-score",
+      "name": "LLM Final Numeric Score",
+      "description": "The model sees the task and directly returns a numeric suitability score or final route used as the deciding authority.",
+      "decision_authority": "LLM"
+    },
+    {
+      "id": "categorical-deterministic-picker",
+      "name": "Categorical Features + Deterministic Picker",
+      "description": "The model may classify bounded task features when semantic interpretation is needed; deterministic code applies policy and selects the route.",
+      "decision_authority": "DETERMINISTIC_POLICY"
+    }
+  ],
+  "task_fixtures": [
+    {
+      "id": "T1",
+      "task_shape": "simple factual retrieval from already available context",
+      "expected_route": "RETRIEVAL_ONLY",
+      "risk": "LOW"
+    },
+    {
+      "id": "T2",
+      "task_shape": "single safe deterministic tool operation",
+      "expected_route": "DIRECT_CAPABILITY",
+      "risk": "LOW"
+    },
+    {
+      "id": "T3",
+      "task_shape": "multi-step engineering analysis with known dependencies",
+      "expected_route": "PLAN_EXECUTE",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "T4",
+      "task_shape": "repository mutation requiring explicit verification",
+      "expected_route": "PLAN_EXECUTE_VERIFY",
+      "risk": "HIGH"
+    },
+    {
+      "id": "T5",
+      "task_shape": "known repeated task with a previously verified workflow",
+      "expected_route": "WORKFLOW_REUSE",
+      "risk": "MEDIUM"
+    }
+  ],
+  "evidence_requirements": [
+    "input task fixture and normalized task features",
+    "raw model output where a model is used",
+    "deterministic policy inputs and selected route",
+    "route decision trace",
+    "latency and model-token/cost observation",
+    "repeated-run route results for the same fixture",
+    "schema-validation result for categorical outputs"
+  ],
+  "metrics": [
+    {
+      "id": "expected-route-accuracy",
+      "description": "Fraction of fixtures routed to the independently specified expected route.",
+      "direction": "HIGHER_IS_BETTER"
+    },
+    {
+      "id": "repeatability",
+      "description": "Fraction of repeated identical fixtures that produce the same final route.",
+      "direction": "HIGHER_IS_BETTER"
+    },
+    {
+      "id": "invalid-decision-rate",
+      "description": "Fraction of decisions outside the allowed route/policy schema.",
+      "direction": "LOWER_IS_BETTER"
+    },
+    {
+      "id": "unnecessary-deep-reasoning-rate",
+      "description": "Fraction of low-complexity fixtures escalated to a higher reasoning strategy than required.",
+      "direction": "LOWER_IS_BETTER"
+    },
+    {
+      "id": "decision-latency-ms",
+      "description": "Time required to reach a routing decision, excluding downstream task execution.",
+      "direction": "LOWER_IS_BETTER"
+    }
+  ],
+  "success_criteria": [
+    "Both variants run against exactly the same versioned fixtures.",
+    "No result is labelled VERIFIED from model self-judgment alone.",
+    "The deterministic variant records the categorical features and policy rule that produced every route.",
+    "Repeated runs are sufficient to measure routing stability rather than relying on one anecdotal example.",
+    "Published conclusions report measured results and failure cases rather than claiming the hypothesis in advance."
+  ],
+  "publication": {
+    "publish_results_only_after_verification": true,
+    "content_angles": [
+      "Why an LLM should not be the final numeric judge for enterprise routing",
+      "A small deterministic picker can be more useful than a bigger reasoning model",
+      "How to separate semantic classification from execution authority"
+    ]
+  },
+  "references": [
+    {
+      "label": "all-agentic-architectures",
+      "url": "https://github.com/FareedKhan-dev/all-agentic-architectures",
+      "use": "Reference implementation and deterministic-picker pattern source; ideas are adapted and evaluated, not copied as architecture authority."
+    }
+  ]
+}
